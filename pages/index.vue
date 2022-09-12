@@ -14,10 +14,34 @@
     else {
         urlval = `/api/infections`
     }
-    const res =  await $fetch(urlval, {
-        baseURL: runtimeConfig.public.apiEndpoint
-    })
-    infected.value = res
+    try {
+        const res =  await $fetch(urlval, {
+            baseURL: runtimeConfig.public.apiEndpoint
+        })
+        infected.value = res
+    }
+    catch (err) {
+        console.log(err)
+    }
+
+  }
+
+  async function update(index: number) {
+    if (index >= 0 && index < infected.value.length) {
+        try {
+            const res =  await $fetch(`/api/notify/${infected.value[index].id}`, {
+                method: 'put',
+                baseURL: runtimeConfig.public.apiEndpoint
+            })
+            refreshNuxtData()
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    else {
+        console.log("Invalid index!")
+    }
+
   }
 </script>
 
@@ -60,7 +84,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="people in infected" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <tr v-for="(people, index) in infected" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                     <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         {{people.name}}
                     </th>
@@ -74,7 +98,7 @@
                         {{people.phone}}
                     </td>
                     <td v-if="people.infections.notifications == null" class="py-4 px-6">
-                        <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Notify</a>
+                        <button type="button" @click="update(index)" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800">Notify</button>
                     </td>
                     <td v-else class="py-4 px-6">
                         Notified!
