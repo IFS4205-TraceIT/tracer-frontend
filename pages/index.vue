@@ -29,7 +29,7 @@
   async function update(index: number) {
     if (index >= 0 && index < infected.value.length) {
         try {
-            const res =  await $fetch(`/api/notify/${infected.value[index].id}`, {
+            const res =  await $fetch(`/api/notify/${infected.value[index].id}/${infected.value[index].infections.id}`, {
                 method: 'put',
                 baseURL: runtimeConfig.public.apiEndpoint
             })
@@ -79,6 +79,9 @@
                         Phone Number
                     </th>
                     <th scope="col" class="py-3 px-6">
+                        Date of Infection
+                    </th>
+                    <th scope="col" class="py-3 px-6">
                         Notifications
                     </th>
                 </tr>
@@ -96,6 +99,9 @@
                     </td>
                     <td class="py-4 px-6">
                         {{people.phone}}
+                    </td>
+                    <td class="py-4 px-6">
+                        {{people.infections.recorded_timestamp}}
                     </td>
                     <td v-if="people.infections.notifications == null" class="py-4 px-6">
                         <button type="button" @click="update(index)" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800">Notify</button>
