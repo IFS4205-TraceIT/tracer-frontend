@@ -86,7 +86,7 @@
             <tbody>
                 <tr v-for="(people, index) in infected" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                     <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {{people.name}}
+                        <NuxtLink :to="`/closecontact/${people.id}`">{{people.name}}</NuxtLink> 
                     </th>
                     <td class="py-4 px-6">
                         {{people.nric}}
