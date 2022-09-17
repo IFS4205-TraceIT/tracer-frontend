@@ -12,7 +12,7 @@ refreshNuxtData();
 </script>
 
 <template>
-  <div class="flex w-full">
+  <div class="container flex w-full m-auto">
     <div class="overflow-x-auto w-full relative shadow-md sm:rounded-lg">
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <caption
