@@ -4,6 +4,8 @@ const authUser = useState("authUser") as any;
 const { $clearToken } = useNuxtApp();
 const router = useRouter();
 
+const collapsed = ref(true);
+
 function logout() {
   $fetch("/auth/logout", {
     method: "POST",
@@ -18,6 +20,10 @@ function logout() {
   authUser.value = null;
   $clearToken();
   router.go(0);
+}
+
+function toggleNavbar() {
+  collapsed.value = !collapsed.value;
 }
 </script>
 
@@ -36,6 +42,7 @@ function logout() {
         class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
         aria-controls="navbar-default"
         aria-expanded="false"
+        @click="toggleNavbar"
       >
         <span class="sr-only">Open main menu</span>
         <svg
@@ -52,13 +59,19 @@ function logout() {
           ></path>
         </svg>
       </button>
-      <div id="navbar-default" class="hidden w-full md:block md:w-auto">
+      <div
+        id="navbar-default"
+        class="w-full md:block md:w-auto"
+        :class="{ hidden: collapsed }"
+      >
         <ul
           v-if="authUser"
           class="flex flex-col p-4 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
         >
           <li class="dark:text-gray-200">
-            Logged in as: {{ authUser.username }}
+            <span class="py-2 pr-4 pl-3 md:p-0"
+              >Logged in as: {{ authUser.username }}</span
+            >
           </li>
           <li>
             <button
