@@ -1,18 +1,15 @@
 <script setup lang="ts">
-const runtimeConfig = useRuntimeConfig();
+const { useApi } = useAuth();
 
 const route = useRoute();
-const { data: closecontact } = await useFetch(
-  `/api/closecontacts/${route.params.id}`,
-  {
-    baseURL: runtimeConfig.public.apiEndpoint,
-  }
+const { data: closecontact } = await useApi(
+  `/api/closecontacts/${route.params.id}`
 );
 refreshNuxtData();
 </script>
 
 <template>
-  <div class="container flex w-full m-auto">
+  <div class="container flex w-full mx-auto my-4">
     <div class="overflow-x-auto w-full relative shadow-md sm:rounded-lg">
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <caption
@@ -58,6 +55,12 @@ refreshNuxtData();
           </tr>
         </tbody>
       </table>
+      <div
+        v-if="closecontact && (closecontact as Array<any>).length === 0"
+        class="text-center p-4 dark:bg-gray-800"
+      >
+        No records found
+      </div>
     </div>
   </div>
 </template>

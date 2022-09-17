@@ -1,9 +1,7 @@
 <script setup lang="ts">
-const runtimeConfig = useRuntimeConfig();
+const { useApi } = useAuth();
 
-const { data: infected } = await useFetch("/api/infections", {
-  baseURL: runtimeConfig.public.apiEndpoint,
-});
+const { data: infected } = await useApi("/api/infections");
 
 async function filterData(event: any) {
   let urlval: string;
@@ -13,9 +11,7 @@ async function filterData(event: any) {
     urlval = `/api/infections`;
   }
   try {
-    const res = await $fetch(urlval, {
-      baseURL: runtimeConfig.public.apiEndpoint,
-    });
+    const res = await useApi(urlval);
     infected.value = res;
   } catch (err) {
     console.log(err);
@@ -25,11 +21,10 @@ async function filterData(event: any) {
 async function update(index: number) {
   if (index >= 0 && index < infected.value.length) {
     try {
-      await $fetch(
+      await useApi(
         `/api/notify/${infected.value[index].id}/${infected.value[index].infections.id}`,
         {
           method: "put",
-          baseURL: runtimeConfig.public.apiEndpoint,
         }
       );
       refreshNuxtData();
@@ -43,7 +38,7 @@ async function update(index: number) {
 </script>
 
 <template>
-  <div class="container flex w-full m-auto">
+  <div class="container flex w-full mx-auto my-4">
     <div class="overflow-x-auto w-full relative shadow-md sm:rounded-lg">
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <caption
@@ -138,6 +133,12 @@ async function update(index: number) {
           </tr>
         </tbody>
       </table>
+      <div
+        v-if="infected && (infected as Array<any>).length === 0"
+        class="text-center p-4 dark:bg-gray-800"
+      >
+        No records found
+      </div>
     </div>
   </div>
 </template>
