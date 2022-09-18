@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { FetchOptions } from "ohmyfetch";
+import { Ref } from "vue";
 import { AuthUser } from "~/types/AuthUser";
 
-const temporaryUser = () => {
+const temporaryUser = (): Ref<AuthUser> => {
   return useState("temporaryUser", (): AuthUser => null);
 };
 
-const authUser = () => {
+const authUser = (): Ref<AuthUser> => {
   return useState("authUser", (): AuthUser => null);
 };
 
