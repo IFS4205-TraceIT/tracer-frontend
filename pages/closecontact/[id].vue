@@ -5,7 +5,6 @@ const route = useRoute();
 const { data: closecontact } = await useApi(
   `/api/closecontacts/${route.params.id}`
 );
-refreshNuxtData();
 </script>
 
 <template>

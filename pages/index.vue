@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { useApi } = useAuth();
 
-const { data: infected } = await useApi("/api/infections");
+const { data: infected, refresh } = await useApi("/api/infections");
 
 async function filterData(event: any) {
   let urlval: string;
@@ -11,10 +11,10 @@ async function filterData(event: any) {
     urlval = `/api/infections`;
   }
   try {
-    const res = await useApi(urlval);
-    infected.value = res;
+    const { data: res } = await useApi(urlval);
+    infected.value = res.value;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 
@@ -27,7 +27,7 @@ async function update(index: number) {
           method: "put",
         }
       );
-      refreshNuxtData();
+      refresh();
     } catch (err) {
       console.log(err);
     }

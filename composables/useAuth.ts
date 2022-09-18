@@ -37,6 +37,7 @@ const useApi = (url: string, options?: FetchOptions) => {
     baseURL,
     headers,
     ...opts,
+    initialCache: false,
   });
 };
 
