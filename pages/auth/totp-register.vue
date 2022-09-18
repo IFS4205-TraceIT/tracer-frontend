@@ -36,10 +36,10 @@ async function generateQr() {
 
 onMounted(() => {
   if (!temporaryUser.value || authUser.value) {
-    return navigateTo({ path: "/auth/login" });
+    return navigateTo("/auth/login");
   }
   if (temporaryUser.value.has_otp) {
-    return navigateTo({ path: "/auth/totp" });
+    return navigateTo("/auth/totp");
   }
 });
 </script>

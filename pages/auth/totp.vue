@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { TokenPair } from "~/types/AuthUser";
 
@@ -25,6 +24,7 @@ async function onSubmit() {
     authUser.value = temporaryUser.value;
     authUser.value.tokens = newTokens;
     $storeToken(newTokens);
+    temporaryUser.value = null;
 
     return navigateTo("/");
   } catch (err) {
@@ -42,10 +42,10 @@ async function onSubmit() {
 
 onMounted(() => {
   if (!temporaryUser.value || authUser.value) {
-    return navigateTo({ path: "/auth/login" });
+    return navigateTo("/auth/login");
   }
   if (!temporaryUser.value.has_otp) {
-    return navigateTo({ path: "/auth/totp" });
+    return navigateTo("/auth/totp");
   }
 });
 </script>
@@ -78,6 +78,7 @@ onMounted(() => {
           name="totp"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           required
+          autofocus
         />
       </div>
       <button
