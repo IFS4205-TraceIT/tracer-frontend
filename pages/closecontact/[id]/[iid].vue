@@ -3,7 +3,7 @@ const { useApi } = useAuth();
 
 const route = useRoute();
 const { data: closecontact } = await useApi(
-  `/api/closecontacts/${route.params.id}`
+  `/api/closecontacts/${route.params.id}/${route.params.iid}`
 );
 </script>
 

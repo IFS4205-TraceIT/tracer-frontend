@@ -101,9 +101,10 @@ async function update(index: number) {
               scope="row"
               class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
-              <NuxtLink :to="`/closecontact/${people.id}`">{{
-                people.name
-              }}</NuxtLink>
+              <NuxtLink
+                :to="`/closecontact/${people.id}/${people.infections.id}`"
+                >{{ people.name }}</NuxtLink
+              >
             </th>
             <td class="py-4 px-6">
               {{ people.nric }}
