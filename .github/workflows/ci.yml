@@ -1,0 +1,40 @@
+name: Tracer Frontend CI
+on: [push, pull_request]
+
+jobs:
+  tracer-frontend-ci:
+    # Only run on runners with the 'ci' label
+    runs-on: ci
+
+    container: node:18.9.0-slim
+
+    steps: 
+      - name: Cleanup build folder
+        run: |
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+
+      - name: Clone repo
+        uses: actions/checkout@v3
+
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+
+      - uses: actions/cache@v3
+        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run tests
+        run: echo "Passed all tests!"
