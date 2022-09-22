@@ -5,9 +5,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  frontend-ci:
+  tracer-frontend-release:
     # Only run on runners with the 'ci' label
-    runs-on: cd-test
+    runs-on: ci
 
     container: node:18.9.0-slim
 
@@ -37,10 +37,23 @@ jobs:
         run: npm install
 
       - name: Generate files
-        run: npm generate
+        run: npm run generate
       
-      - name: List files
-        run: ls -al .output/public
+      - name: Archive files
+        working-directory: ./.output/
+        run: |
+          tar -czf tracer-frontend.tar.gz ./public
+
+      - name: Delete previous release
+        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true
+          tag_name: vlatest
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       
-      - name: Run tests
-        run: echo "Passed all tests!"
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./.output/tracer-frontend.tar.gz"
+          tag: vlatest
