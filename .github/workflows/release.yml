@@ -1,7 +1,7 @@
 name: Release Frontend
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
 
     container: node:18.9.0-slim
 
-    steps: 
+    steps:
       - name: Cleanup build folder
         run: |
           rm -rf ./* || true
@@ -32,7 +32,7 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      
+
       - name: Install dependencies
         run: npm install
 
@@ -40,7 +40,7 @@ jobs:
         run: npm run generate
         env:
           API_BASEURL: http://traceit-04-i.comp.nus.edu.sg/tracer/api
-      
+
       - name: Archive files
         working-directory: ./.output/
         run: |
@@ -53,7 +53,7 @@ jobs:
           tag_name: vlatest
         env:
           GITHUB_TOKEN: ${{ github.token }}
-      
+
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
