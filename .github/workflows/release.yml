@@ -38,6 +38,8 @@ jobs:
 
       - name: Generate files
         run: npm run generate
+        env:
+          API_BASEURL: http://traceit-04-i.comp.nus.edu.sg/tracer/api
       
       - name: Archive files
         working-directory: ./.output/
