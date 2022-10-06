@@ -39,7 +39,7 @@ jobs:
       - name: Generate files
         run: npm run generate
         env:
-          API_BASEURL: http://traceit-04.comp.nus.edu.sg/tracer/api
+          API_BASEURL: https://traceit-04.comp.nus.edu.sg/tracer/api
           NUXT_APP_BASE_URL: /tracer/
 
       - name: Archive files
