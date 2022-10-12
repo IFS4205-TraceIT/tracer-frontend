@@ -1,20 +1,27 @@
 <script setup lang="ts">
 const { useApi } = useAuth();
 
-const route = useRoute();
+const { data: buildings } = await useApi("/building/buildingaccess");
 
-const { data: buildinglogs } = await useApi(`/building/${route.params.id}`);
+const nric = ref("");
+const dateaccess = ref("");
 
-async function filterData(event: any) {
+async function filterData() {
   let urlval: string;
-  if (event.target.value) {
-    urlval = `/building/${route.params.id}/${event.target.value}`;
+  urlval = `/building/buildingaccess`;
+  if (nric.value !== "") {
+    urlval = urlval + `/${nric.value}`;
   } else {
-    urlval = `/building/${route.params.id}`;
+    urlval = urlval + `/none`;
   }
+
+  if (dateaccess.value !== "") {
+    urlval = urlval + `/${dateaccess.value}`;
+  }
+
   try {
     const { data: res } = await useApi(urlval);
-    buildinglogs.value = res.value;
+    buildings.value = res.value;
   } catch (err) {
     console.error(err);
   }
@@ -28,17 +35,10 @@ async function filterData(event: any) {
         <caption
           class="p-5 text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800"
         >
-          Building Access logs
-          <br />
-          <h3
-            v-if="buildinglogs && (buildinglogs as Array<any>).length !== 0"
-            class="text-base"
-          >
-            Building: {{ buildinglogs[0].building.name }}
-          </h3>
+          Building Access
           <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-            Contract tracers can view all the access logs<br />
-            The search below will show all entries to a building on that date.
+            Contract tracers can find building access entries here for a
+            specific user.<br />
           </p>
           <div class="py-4">
             <div class="relative mt-1">
@@ -61,59 +61,55 @@ async function filterData(event: any) {
               </div>
               <input
                 id="table-search"
+                v-model="dateaccess"
                 type="date"
                 class="block p-2 pl-10 w-80 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Search for items"
-                @change="filterData"
+                placeholder="Search for date"
               />
             </div>
+            <div class="relative mt-1">
+              <div
+                class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
+              ></div>
+              <input
+                id="table-search"
+                v-model="nric"
+                type="text"
+                class="block p-2 pl-10 w-80 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Search for NRIC"
+              />
+            </div>
+            <button
+              class="block p-2 w-80 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              @click="filterData"
+            >
+              Search
+            </button>
           </div>
         </caption>
         <thead
           class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
         >
           <tr>
-            <th scope="col" class="py-3 px-6">Name</th>
-            <th scope="col" class="py-3 px-6">NRIC</th>
-            <th scope="col" class="py-3 px-6">Gender</th>
-            <th scope="col" class="py-3 px-6">Email</th>
-            <th scope="col" class="py-3 px-6">Phone Number</th>
-            <th scope="col" class="py-3 px-6">Building Entry Time</th>
+            <th scope="col" class="py-3 px-6">Building Name</th>
+            <th scope="col" class="py-3 px-6">Location</th>
+            <th scope="col" class="py-3 px-6">Access Datetime</th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="log in buildinglogs"
-            :key="log.id"
+            v-for="each in buildings"
+            :key="each.id"
             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
           >
-            <!-- <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            <NuxtLink :to="`/building/${log.id}`">{{ log.name }}
-                            </NuxtLink>
-                        </th> -->
-            <td class="py-4 px-6">
-              {{ log.user.name }}
-            </td>
-            <td class="py-4 px-6">
-              {{ log.user.nric }}
-            </td>
-            <td class="py-4 px-6">
-              {{ log.user.gender }}
-            </td>
-            <td class="py-4 px-6">
-              {{ log.user.email }}
-            </td>
-            <td class="py-4 px-6">
-              {{ log.user.phone }}
-            </td>
-            <td class="py-4 px-6">
-              {{ log.access_timestamp }}
-            </td>
+            <td class="py-4 px-6">{{ each.building.name }}</td>
+            <td class="py-4 px-6">{{ each.building.location }}</td>
+            <td class="py-4 px-6">{{ each.access_timestamp }}</td>
           </tr>
         </tbody>
       </table>
       <div
-        v-if="buildinglogs && (buildinglogs as Array<any>).length === 0"
+        v-if="!!buildings && (buildings as Array<any>).length === 0"
         class="text-center p-4 dark:bg-gray-800"
       >
         No records found
