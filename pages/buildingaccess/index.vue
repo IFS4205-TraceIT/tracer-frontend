@@ -9,13 +9,13 @@ const dateaccess = ref("");
 async function filterData() {
   let urlval: string;
   urlval = `/building/buildingaccess`;
-  if(nric.value !== ""){
+  if (nric.value !== "") {
     urlval = urlval + `/${nric.value}`;
   } else {
     urlval = urlval + `/none`;
   }
 
-  if(dateaccess.value !== ""){
+  if (dateaccess.value !== "") {
     urlval = urlval + `/${dateaccess.value}`;
   }
 
@@ -25,9 +25,7 @@ async function filterData() {
   } catch (err) {
     console.error(err);
   }
-
 }
-
 </script>
 
 <template>
@@ -39,7 +37,8 @@ async function filterData() {
         >
           Building Access
           <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-            Contract tracers can find building access entries here for a specific user.<br />
+            Contract tracers can find building access entries here for a
+            specific user.<br />
           </p>
           <div class="py-4">
             <div class="relative mt-1">
@@ -62,8 +61,8 @@ async function filterData() {
               </div>
               <input
                 id="table-search"
-                type="date"
                 v-model="dateaccess"
+                type="date"
                 class="block p-2 pl-10 w-80 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Search for date"
               />
@@ -71,22 +70,21 @@ async function filterData() {
             <div class="relative mt-1">
               <div
                 class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
-              >
-              </div>
+              ></div>
               <input
                 id="table-search"
-                type="text"
                 v-model="nric"
+                type="text"
                 class="block p-2 pl-10 w-80 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Search for NRIC"
               />
             </div>
             <button
-                class="block p-2 w-80 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                @click="filterData"
-              >
-                Search
-              </button>
+              class="block p-2 w-80 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              @click="filterData"
+            >
+              Search
+            </button>
           </div>
         </caption>
         <thead
@@ -103,10 +101,10 @@ async function filterData() {
             v-for="each in buildings"
             :key="each.id"
             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-          > 
-          <td class="py-4 px-6">{{ each.building.name }}</td>
-          <td class="py-4 px-6">{{ each.building.location }}</td>
-          <td class="py-4 px-6">{{ each.access_timestamp }}</td>
+          >
+            <td class="py-4 px-6">{{ each.building.name }}</td>
+            <td class="py-4 px-6">{{ each.building.location }}</td>
+            <td class="py-4 px-6">{{ each.access_timestamp }}</td>
           </tr>
         </tbody>
       </table>
