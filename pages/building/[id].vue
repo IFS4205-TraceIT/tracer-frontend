@@ -5,7 +5,6 @@ const route = useRoute();
 
 const { data: buildinglogs } = await useApi(`/building/${route.params.id}`);
 
-console.log(buildinglogs);
 async function filterData(event: any) {
   let urlval: string;
   if (event.target.value) {
