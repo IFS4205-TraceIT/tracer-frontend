@@ -1,4 +1,4 @@
-import { TokenPair, LoginResponse } from "~~/types/AuthUser";
+import { LoginResponse } from "~~/types/AuthUser";
 
 export default defineNuxtRouteMiddleware(async (to) => {
   // const tempUser = useState('temporaryUser');
