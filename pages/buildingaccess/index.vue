@@ -40,8 +40,8 @@ async function filterData() {
             Contract tracers can find building access entries here for a
             specific user.<br />
           </p>
-          <div class="py-4">
-            <div class="relative mt-1">
+          <div class="flex flex-wrap gap-2 items-stretch py-4">
+            <div class="relative">
               <div
                 class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
               >
@@ -67,7 +67,7 @@ async function filterData() {
                 placeholder="Search for date"
               />
             </div>
-            <div class="relative mt-1">
+            <div class="relative">
               <div
                 class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
               ></div>
@@ -75,12 +75,12 @@ async function filterData() {
                 id="table-search"
                 v-model="nric"
                 type="text"
-                class="block p-2 pl-10 w-80 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="block p-2 pl-10 w-80 h-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Search for NRIC"
               />
             </div>
             <button
-              class="block p-2 w-80 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="p-2 w-40 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               @click="filterData"
             >
               Search

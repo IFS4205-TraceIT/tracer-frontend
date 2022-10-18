@@ -11,10 +11,13 @@ const authUser = (): Ref<AuthUser> => {
   return useState("authUser", (): AuthUser => null);
 };
 
-const useApi = (url: string, options?: FetchOptions) => {
-  const { $retrieveToken } = useNuxtApp();
-
-  const accessToken = $retrieveToken()?.access;
+async function prepareApiPayload(options?: FetchOptions) {
+  const { $getOrReplaceTokenPair } = useNuxtApp();
+  const rawToken = await $getOrReplaceTokenPair();
+  if (rawToken === null) {
+    throw new Error("No token found");
+  }
+  const accessToken = rawToken.access;
 
   const headers: HeadersInit = {
     Accept: "application/json",
@@ -22,23 +25,25 @@ const useApi = (url: string, options?: FetchOptions) => {
     ...options?.headers,
   };
 
-  // At this point all the `headers` passed by the user where correctly
-  // set in the defaults, now we will spread `options` to remove the
-  // `headers` attribute so we don't spread it again in `useFetch`
   const opts: FetchOptions = options
     ? (({ headers, ...opts }) => opts)(options)
-    : null;
+    : {};
 
   const baseURL = !options?.baseURL
     ? useRuntimeConfig().public.apiEndpoint
     : options.baseURL;
 
-  return useFetch(url, {
-    baseURL,
-    headers,
-    ...opts,
-    initialCache: false,
-  });
+  return { baseURL, headers, ...opts };
+}
+
+const useApi = async (url: string, options?: FetchOptions) => {
+  const payload = await prepareApiPayload(options);
+  return useAsyncData(url, () => $fetch(url, payload));
+};
+
+const useLazyApi = async (url: string, options?: FetchOptions) => {
+  const payload = await prepareApiPayload(options);
+  return useLazyAsyncData(url, () => $fetch(url, payload));
 };
 
 export default function () {
@@ -46,5 +51,6 @@ export default function () {
     temporaryUser,
     authUser,
     useApi,
+    useLazyApi,
   };
 }

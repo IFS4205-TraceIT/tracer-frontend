@@ -1,7 +1,11 @@
 <script setup lang="ts">
-const { useApi } = useAuth();
+const { useApi, useLazyApi } = useAuth();
 
-const { data: infected, refresh } = await useApi("/api/infections");
+const {
+  data: infected,
+  pending,
+  refresh,
+} = await useLazyApi("/api/infections");
 
 async function filterData(event: any) {
   let urlval: string;
@@ -50,7 +54,7 @@ async function update(index: number) {
             information!<br />
             The search bar below can be used to filter by a specific date.
           </p>
-          <div class="py-4">
+          <div v-if="!pending" class="py-4">
             <div class="relative mt-1">
               <div
                 class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
@@ -134,6 +138,12 @@ async function update(index: number) {
           </tr>
         </tbody>
       </table>
+      <div
+        v-if="pending"
+        class="text-center p-4 text-gray-500 dark:bg-gray-800"
+      >
+        Loading...
+      </div>
       <div
         v-if="infected && (infected as Array<any>).length === 0"
         class="text-center p-4 dark:bg-gray-800"

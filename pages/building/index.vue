@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { useApi } = useAuth();
 
-const { data: buildings } = await useApi("/building");
+const { data: buildings } = await useApi("/building/");
 </script>
 
 <template>
