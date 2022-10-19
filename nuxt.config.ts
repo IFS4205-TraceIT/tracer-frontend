@@ -14,6 +14,9 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  meta: {
+    title: "TraceIT Contact Tracer Portal",
+  },
   runtimeConfig: {
     public: {
       apiEndpoint: process.env.API_BASEURL || "http://localhost:8000",

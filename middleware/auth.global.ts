@@ -1,4 +1,4 @@
-import { TokenPair, LoginResponse } from "~~/types/AuthUser";
+import { LoginResponse } from "~~/types/AuthUser";
 
 export default defineNuxtRouteMiddleware(async (to) => {
   // const tempUser = useState('temporaryUser');
@@ -7,8 +7,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
     $retrieveToken,
     $decodeToken,
     $hasValidToken,
-    $isTokenRefreshable,
-    $storeToken,
+    $clearToken,
+    $getOrReplaceTokenPair,
   } = useNuxtApp();
 
   const rawToken = $retrieveToken();
@@ -27,57 +27,33 @@ export default defineNuxtRouteMiddleware(async (to) => {
       }
     }
   } else if (process.client) {
-    if (!rawToken) {
-      return navigateTo("/auth/login");
-    }
-
-    const token = $decodeToken(rawToken);
-    if (!token) {
-      return navigateTo("/auth/login");
-    }
-
-    const valid = $hasValidToken(token);
-    const refreshable = $isTokenRefreshable(token);
-    if (!valid) {
-      if (!refreshable) {
+    try {
+      const refreshedToken = await $getOrReplaceTokenPair();
+      if (!refreshedToken) {
+        $clearToken();
         return navigateTo("/auth/login");
       }
 
-      try {
-        const res = await $fetch<TokenPair>("/auth/refresh", {
-          method: "POST",
+      if (!authUser.value) {
+        const userDetailsRes = (await $fetch("/auth/user", {
+          // method: 'POST',
           baseURL: useRuntimeConfig().public.apiEndpoint,
-          body: {
-            refresh: rawToken.refresh,
+          headers: {
+            Authorization: `Bearer ${refreshedToken.access}`,
           },
-        });
+        })) as LoginResponse;
 
-        $storeToken(res);
-      } catch (err) {
-        return navigateTo("/auth/login");
-      }
-    }
-
-    const refreshedToken = $retrieveToken();
-
-    // This should NEVER run.
-    if (!refreshedToken) {
-      return navigateTo("/auth/login");
-    }
-
-    if (!authUser.value) {
-      $fetch<LoginResponse>("/auth/user", {
-        // method: 'POST',
-        baseURL: useRuntimeConfig().public.apiEndpoint,
-        headers: {
-          Authorization: `Bearer ${refreshedToken.access}`,
-        },
-      }).then((res) => {
-        if (res) {
-          res.user.tokens = refreshedToken;
-          authUser.value = res.user;
+        if (userDetailsRes) {
+          userDetailsRes.user.tokens = refreshedToken;
+          authUser.value = userDetailsRes.user;
+        } else {
+          $clearToken();
+          return navigateTo("/auth/login");
         }
-      });
+      }
+    } catch (err) {
+      $clearToken();
+      return navigateTo("/auth/login");
     }
   }
 });

@@ -91,6 +91,44 @@ function clearSessionStorage() {
   sessionStorage.removeItem("refresh");
 }
 
+async function getOrReplaceTokenPair() {
+  const rawToken = getTokenFromSessionStorage();
+  if (!rawToken) {
+    return null;
+  }
+
+  const token = parseTokenFromSessionStorage(rawToken);
+  if (!token) {
+    return null;
+  }
+
+  const valid = checkTokenValidity(token);
+  const refreshable = checkTokenRefreshable(token);
+
+  if (valid) {
+    return rawToken;
+  }
+
+  if (!refreshable) {
+    return null;
+  }
+
+  try {
+    const res = (await $fetch("/auth/refresh", {
+      method: "POST",
+      baseURL: useRuntimeConfig().public.apiEndpoint,
+      body: {
+        refresh: rawToken.refresh,
+      },
+    })) as TokenPair;
+
+    saveTokenToSessionStorage(res);
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
 export default defineNuxtPlugin(() => {
   return {
     provide: {
@@ -100,6 +138,7 @@ export default defineNuxtPlugin(() => {
       clearToken: clearSessionStorage,
       hasValidToken: checkTokenValidity,
       isTokenRefreshable: checkTokenRefreshable,
+      getOrReplaceTokenPair,
     },
   };
 });
