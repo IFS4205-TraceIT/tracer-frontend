@@ -1,4 +1,4 @@
-# Nuxt 3 Minimal Starter
+# Nuxt 3 Minimal Starter [![Tracer Frontend CI](https://github.com/IFS4205-TraceIT/tracer-frontend/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/IFS4205-TraceIT/tracer-frontend/actions/workflows/ci.yml) [![Semgrep](https://github.com/IFS4205-TraceIT/tracer-frontend/actions/workflows/semgrep.yml/badge.svg?branch=main)](https://github.com/IFS4205-TraceIT/tracer-frontend/actions/workflows/semgrep.yml)
 
 Look at the [nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
 
