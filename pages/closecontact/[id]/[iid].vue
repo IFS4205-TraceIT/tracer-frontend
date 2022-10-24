@@ -24,6 +24,7 @@ const { data: closecontact } = await useApi(
             <th scope="col" class="py-3 px-6">NRIC</th>
             <th scope="col" class="py-3 px-6">Email</th>
             <th scope="col" class="py-3 px-6">Phone Number</th>
+            <th scope="col" class="py-3 px-6">RSSI</th>
             <th scope="col" class="py-3 px-6">Close Contact Date</th>
           </tr>
         </thead>
@@ -47,6 +48,9 @@ const { data: closecontact } = await useApi(
             </td>
             <td class="py-4 px-6">
               {{ people.phone }}
+            </td>
+            <td class="py-4 px-6">
+              {{ people.rssi }}
             </td>
             <td class="py-4 px-6">
               {{ people.contact_timestamp }}
